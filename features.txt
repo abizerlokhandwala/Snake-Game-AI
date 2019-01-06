@@ -1,0 +1,5 @@
+8 distances from correct food
+8*2 distances from wrong food
+8 distances from rock
+4 distances from walls
+distance from self
