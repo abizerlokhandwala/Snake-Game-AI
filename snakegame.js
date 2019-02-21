@@ -44,7 +44,7 @@ function game(){
 	var directionflag=1; // 1 to say that direction change is allowed
 
 	var snake_array=[]; //snake body in an array
-	var speed=100;	//the lower, the faster
+	var speed=250;	//the lower, the faster
 	var ds=0; //change in speed
 	var clrReturn;
 	var score=0;
@@ -58,8 +58,8 @@ function game(){
 	//columns = 37
 	//rows = 24
 
-	var row = 24;
-	var col = 37;
+	var row = 25;
+	var col = 38;
 	var mat = new Array(row);
 	for(var i = 0;i<row;i++){
 		mat[i] = new Array(col);
@@ -136,6 +136,68 @@ function game(){
 			mat[(yfood1-30)/15][(xfood1-30)/15] = 0;
 			mat[(yfood2-30)/15][(xfood2-30)/15] = 0;
 			mat[(yfood3-30)/15][(xfood3-30)/15] = 0;
+		}
+	}
+
+	function issafe(x,y,vis){
+		if(x<0 || x>=col || y<0 || y>=row || vis[y][x] == 1){
+			return 0;
+		}
+		if(mat[y][x] == 1 || mat[y][x] == 2 || mat[y][x] == 5){
+			return 0;
+		}
+		return 1;
+	}
+
+	function return_direction(){
+		var vis = Array(row);
+		var parent = Array(row);
+		for(var i = 0;i<row;i++){
+			vis[i] = new Array(col);
+			parent[i] = new Array(col);
+		}
+		for(var i=0;i<row;i++){
+			for(var j=0;j<col;j++){
+				vis[i][j] = 0;
+				parent[i][j] = {x:-1,y:-1};
+			}
+		}
+		var dx = [1,0,-1,0];
+		var dy = [0,1,0,-1];
+		var q = [];
+		var curr = {x:xhead,y:yhead};
+		q.unshift(curr);
+		vis[yhead][xhead]=1;
+		var found = 0;
+		var pos;
+		while(q.length > 0){
+			var val = q.pop();
+			if(mat[val.y][val.x]==3){
+				found = 1;
+				pos = val;
+			}
+			if(found==0){
+				for(var i=0;i<4;i++){
+					if(issafe(dx[i]+val.x,dy[i]+val.y,vis)==1){
+						parent[dy[i]+val.y][dx[i]+val.x] = val;
+						vis[dy[i]+val.y][dx[i]+val.x] = 1;
+						q.unshift({x:dx[i]+val.x,y:dy[i]+val.y});
+					}
+				}
+			}
+		}
+		// console.log(curr);
+		while(parent[pos.y][pos.x]!=curr){
+			pos=parent[pos.y][pos.x];
+		}
+		if(pos.x==curr.x+1){//right
+			return 2;
+		}else if(pos.x==curr.x-1){
+			return 4; //left
+		}else if(pos.y==curr.y+1){
+			return 3; //bottom
+		}else{
+			return 1; //top
 		}
 	}
 
@@ -338,7 +400,8 @@ function game(){
 		snake_array.unshift(tail);		//add variable tail at the start
 		mat[yhead-2][xhead-2] = 1;
 		directionflag=1; //direction change allowed after movement of snake is done
-		console.log(mat.toString());
+		console.log(return_direction());
+		// console.log(mat.toString());
 	}
 
 	function conditions(){ //conditions for death
