@@ -53,6 +53,18 @@ function game(){
 	var life=3;
 	var rotate=2; //1 is top, 2 right, 3 down, 4 left
 
+	//left top = (30,30)
+	//right bottom = (570,375)
+	//columns = 37
+	//rows = 24
+
+	var row = 24;
+	var col = 37;
+	var mat = new Array(row);
+	for(var i = 0;i<row;i++){
+		mat[i] = new Array(col);
+	}
+
 	var headtop=new Image();			//initialising the images for the canvas
 	headtop.src="images/headtop.png";
 
@@ -85,11 +97,46 @@ function game(){
 
 	function create_snake(){
 
+		for(var i = 0;i<row;i++){
+			for(var j = 0;j<col;j++){
+				mat[i][j] = 0;
+			}
+		}
+
 		for(var i=length-1;i>=0;i--){
 			snake_array.push({ x:(i+2) , y: 3 }); //snake object with x position variable
+			mat[1][i] = 1;
 		}
 		xhead = snake_array[0].x;
 		yhead = snake_array[0].y;
+	}
+
+	function set_mat(){
+		if(xrock){
+			mat[(yrock-30)/15][(xrock-30+cw)/15] = 5;
+			mat[(yrock-30)/15][(xrock-30+2*cw)/15] = 5;
+			mat[(yrock-30+cw)/15][(xrock-30+cw)/15] = 5;
+			mat[(yrock-30+cw)/15][(xrock-30+2*cw)/15] = 5;
+			mat[(yrock-30+2*cw)/15][(xrock-30+cw)/15] = 5;
+			mat[(yrock-30+2*cw)/15][(xrock-30+2*cw)/15] = 5;
+			mat[(yfood1-30)/15][(xfood1-30)/15] = 2;
+			mat[(yfood2-30)/15][(xfood2-30)/15] = 2;
+			mat[(yfood3-30)/15][(xfood3-30)/15] = 3;
+		}
+	}
+
+	function reset_mat(){
+		if(xrock){
+			mat[(yrock-30)/15][(xrock-30+cw)/15] = 0;
+			mat[(yrock-30)/15][(xrock-30+2*cw)/15] = 0;
+			mat[(yrock-30+cw)/15][(xrock-30+cw)/15] = 0;
+			mat[(yrock-30+cw)/15][(xrock-30+2*cw)/15] = 0;
+			mat[(yrock-30+2*cw)/15][(xrock-30+cw)/15] = 0;
+			mat[(yrock-30+2*cw)/15][(xrock-30+2*cw)/15] = 0;
+			mat[(yfood1-30)/15][(xfood1-30)/15] = 0;
+			mat[(yfood2-30)/15][(xfood2-30)/15] = 0;
+			mat[(yfood3-30)/15][(xfood3-30)/15] = 0;
+		}
 	}
 
 	function drawbody(){
@@ -201,6 +248,7 @@ function game(){
 	}
 
 	function update_game(){
+		reset_mat();
 		xfood1=45+Math.floor(Math.random()*(canvas.width-80)/15)*15; //between 45 and width-45
 		yfood1=45+Math.floor(Math.random()*(canvas.height-80)/15)*15; // ^
 		xfood2=45+Math.floor(Math.random()*(canvas.width-80)/15)*15; //between 45 and width-45
@@ -226,6 +274,7 @@ function game(){
 			update_game();
 		}else{
 			update_speed();
+			set_mat();
 		}
 	}
 
@@ -274,17 +323,22 @@ function game(){
 		direction();
 		collision();
 		check();
-		console.log("X: "+Math.abs(cw*xhead-xfood3)+" Y: "+Math.abs(cw*yhead-yfood3));
+		// console.log("X: "+Math.abs(cw*xhead-xfood3)+" Y: "+Math.abs(cw*yhead-yfood3));
+		// console.log("X: "+cw*xhead+" Y: "+cw*yhead);
+		// console.log(xrock+" "+yrock);
 		if(flag==1){
 			flag=0;
 			var tail={ x:xhead, y:yhead };		//variable tail becomes the new head and tail
 		}else{
 			var tail=snake_array.pop();		//pop the last element and store in variable tail
+			// console.log(tail);
+			mat[tail.y-2][tail.x-2] = 0;
 			tail={	x:xhead, y:yhead	};
 		}
 		snake_array.unshift(tail);		//add variable tail at the start
-
+		mat[yhead-2][xhead-2] = 1;
 		directionflag=1; //direction change allowed after movement of snake is done
+		console.log(mat.toString());
 	}
 
 	function conditions(){ //conditions for death
