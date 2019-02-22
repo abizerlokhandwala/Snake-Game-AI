@@ -172,9 +172,11 @@ function game(){
 		var pos;
 		while(q.length > 0){
 			var val = q.pop();
+			pos = val;
 			if(mat[val.y][val.x]==3){
 				found = 1;
 				pos = val;
+				break;
 			}
 			if(found==0){
 				for(var i=0;i<4;i++){
@@ -352,7 +354,7 @@ function game(){
 		clearInterval(clrReturn);   // clear the initial set interval
 		if(speed==50){
 			clrReturn=setInterval(move,speed);
-		} else{
+		}else{
 			speed=speed-ds;				// update the speed to make it faster
 			clrReturn=setInterval(move,speed);  // new set interval with new speed
 		}
