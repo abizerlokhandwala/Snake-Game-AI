@@ -189,6 +189,16 @@ function game(){
 			}
 		}
 		// console.log(found);
+		if(pos==curr){
+			if(rightPressed)
+				return 2;
+			if(leftPressed)
+				return 4;
+			if(topPressed)
+				return 1;
+			if(bottomPressed)
+				return 3;
+		}
 		while(parent[pos.y][pos.x]!=curr){
 			pos=parent[pos.y][pos.x];
 			// console.log(pos.y,pos.x);
