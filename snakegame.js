@@ -306,42 +306,45 @@ function game(){
 
 	function rock_check(xposition,yposition){ //check if rock spawns next to a food particle position
 		if(xposition>=xrock && xposition<=xrock+50 && yposition<=yrock+60 && yposition>=yrock || xrock<=xhead*cw+30 && xrock>=xhead*cw-60 && yrock>=yhead*cw-40 && yrock<=yhead*cw){
-			update_game();
+			return 1;
 		}
+		return 0;
 	}
 
 	function update_game(){
-		reset_mat();
-		xfood1=45+Math.floor(Math.random()*(canvas.width-80)/15)*15; //between 45 and width-45
-		yfood1=45+Math.floor(Math.random()*(canvas.height-80)/15)*15; // ^
-		xfood2=45+Math.floor(Math.random()*(canvas.width-80)/15)*15; //between 45 and width-45
-		yfood2=45+Math.floor(Math.random()*(canvas.height-80)/15)*15;
-		xfood3=45+Math.floor(Math.random()*(canvas.width-80)/15)*15; //between 45 and width-45
-		yfood3=45+Math.floor(Math.random()*(canvas.height-80)/15)*15;
-		xrock=45+Math.floor(Math.random()*(canvas.width-120)/15)*15; //between 45 and width-75
-		yrock=45+Math.floor(Math.random()*(canvas.height-120)/15)*15;
+		while(1){
+			xfood1=45+Math.floor(Math.random()*(canvas.width-80)/15)*15; //between 45 and width-45
+			yfood1=45+Math.floor(Math.random()*(canvas.height-80)/15)*15; // ^
+			xfood2=45+Math.floor(Math.random()*(canvas.width-80)/15)*15; //between 45 and width-45
+			yfood2=45+Math.floor(Math.random()*(canvas.height-80)/15)*15;
+			xfood3=45+Math.floor(Math.random()*(canvas.width-80)/15)*15; //between 45 and width-45
+			yfood3=45+Math.floor(Math.random()*(canvas.height-80)/15)*15;
+			xrock=45+Math.floor(Math.random()*(canvas.width-120)/15)*15; //between 45 and width-75
+			yrock=45+Math.floor(Math.random()*(canvas.height-120)/15)*15;
 
-		if(xfood1<xfood2+30 && yfood1<yfood2+30 && xfood1>xfood2-30 && yfood1>yfood2-30 || xfood2<xfood3+30 && yfood2<yfood3+30 && xfood2>xfood3-30 && yfood2>yfood3-30 || xfood1<xfood3+30 && yfood1<yfood3+30 && xfood1>xfood3-30 && yfood1>yfood3-30 || mat[(yfood3-2*cw)/cw][(xfood3-2*cw)/cw]==1 || mat[(yfood2-2*cw)/cw][(xfood2-2*cw)/cw]==1 || mat[(yfood1-2*cw)/cw][(xfood1-2*cw)/cw]==1){
-			update_game(); //food doesnt spawn next to each other
-		}
+			if(xfood1<xfood2+30 && yfood1<yfood2+30 && xfood1>xfood2-30 && yfood1>yfood2-30 || xfood2<xfood3+30 && yfood2<yfood3+30 && xfood2>xfood3-30 && yfood2>yfood3-30 || xfood1<xfood3+30 && yfood1<yfood3+30 && xfood1>xfood3-30 && yfood1>yfood3-30 || mat[(yfood3-2*cw)/cw][(xfood3-2*cw)/cw]==1 || mat[(yfood2-2*cw)/cw][(xfood2-2*cw)/cw]==1 || mat[(yfood1-2*cw)/cw][(xfood1-2*cw)/cw]==1){
+				continue; //food doesnt spawn next to each other
+			}
 
-		if(mat[(yrock-30)/15][(xrock-30+cw)/15] == 1 || mat[(yrock-30)/15][(xrock-30+2*cw)/15] ==1 || mat[(yrock-30+cw)/15][(xrock-30+cw)/15] == 1 || mat[(yrock-30+cw)/15][(xrock-30+2*cw)/15] == 1 || mat[(yrock-30+2*cw)/15][(xrock-30+cw)/15] == 1 || mat[(yrock-30+2*cw)/15][(xrock-30+2*cw)/15] == 1){
-			update_game(); //if rock spawns on the snake body
-		}
+			if(mat[(yrock-30)/15][(xrock-30+cw)/15] == 1 || mat[(yrock-30)/15][(xrock-30+2*cw)/15] ==1 || mat[(yrock-30+cw)/15][(xrock-30+cw)/15] == 1 || mat[(yrock-30+cw)/15][(xrock-30+2*cw)/15] == 1 || mat[(yrock-30+2*cw)/15][(xrock-30+cw)/15] == 1 || mat[(yrock-30+2*cw)/15][(xrock-30+2*cw)/15] == 1){
+				continue; //if rock spawns on the snake body
+			}
 
-		rock_check(xfood1,yfood1);
-		rock_check(xfood2,yfood2);
-		rock_check(xfood3,yfood3);
+			if(rock_check(xfood1,yfood1) || rock_check(xfood2,yfood2) || rock_check(xfood3,yfood3)){
+				continue;
+			}
 
-		randnum1=2+Math.floor(Math.random()*150); //between 2 and 152
-		randnum2=2+Math.floor(Math.random()*150);
-		question();
-		randnum3=ques*Math.floor(2+Math.random()*10);
-		if(randnum1==randnum2 || randnum2==randnum3 || randnum3==randnum1 || randnum1%ques==0 || randnum2%ques==0){ //if 2 nos are the same or wrong ans are right
-			update_game();
-		}else{
-			update_speed();
-			set_mat();
+			randnum1=2+Math.floor(Math.random()*150); //between 2 and 152
+			randnum2=2+Math.floor(Math.random()*150);
+			question();
+			randnum3=ques*Math.floor(2+Math.random()*10);
+			if(randnum1==randnum2 || randnum2==randnum3 || randnum3==randnum1 || randnum1%ques==0 || randnum2%ques==0){ //if 2 nos are the same or wrong ans are right
+				continue;
+			}else{
+				update_speed();
+				set_mat();
+				break;
+			}
 		}
 	}
 
@@ -359,12 +362,14 @@ function game(){
 		document.getElementById("myCanvas").style.backgroundColor="none"; //no bg color
 		document.getElementById("myCanvas").style.backgroundImage="url('images/grass.jpg')"; //give default bg
 		if(xhead*15==xfood3 && yhead*15==yfood3){ //eats the right particle
+			reset_mat();
 			update_game();
 			score++;
 			flag=1; //length should increase
 			animx=xhead; animy=yhead; //save the place where gobbling animation takes place
 			anim_check=snake_array.length;
 		}else if (xhead*15==xfood1 && yhead*15==yfood1 || xhead*15==xfood2 && yhead*15==yfood2) {
+			reset_mat();
 			update_game();
 			if(score){ //negative score not possible
 			score--;
@@ -535,6 +540,7 @@ function game(){
 		document.getElementById("life3").style.display= "inline-block";
 		addEventListener("keydown", keyDownHandler, false);
 		create_snake(); //make snake array
+		reset_mat();
 		update_game();	//start with making random numbers and positions of food particles, and giving a setInterval
 	}
 
@@ -550,7 +556,8 @@ function game(){
 
     	addEventListener("keydown", keyDownHandler, false);
     	create_snake(); //make snake array
-    	update_game();	//start with making random numbers and positions of food particles, and giving a setInterval
+		reset_mat();
+		update_game();	//start with making random numbers and positions of food particles, and giving a setInterval
     }
 }
 
