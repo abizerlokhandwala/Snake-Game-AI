@@ -44,7 +44,7 @@ function game(){
 	var directionflag=1; // 1 to say that direction change is allowed
 
 	var snake_array=[]; //snake body in an array
-	var speed=100;	//the lower, the faster
+	var speed=50;	//the lower, the faster
 	var ds=0; //change in speed
 	var clrReturn;
 	var score=0;
@@ -186,6 +186,7 @@ function game(){
 				}
 			}
 		}
+		// console.log(found);
 		while(parent[pos.y][pos.x]!=curr){
 			pos=parent[pos.y][pos.x];
 			// console.log(pos.y,pos.x);
@@ -320,8 +321,12 @@ function game(){
 		xrock=45+Math.floor(Math.random()*(canvas.width-120)/15)*15; //between 45 and width-75
 		yrock=45+Math.floor(Math.random()*(canvas.height-120)/15)*15;
 
-		if(xfood1<xfood2+30 && yfood1<yfood2+30 && xfood1>xfood2-30 && yfood1>yfood2-30 || xfood2<xfood3+30 && yfood2<yfood3+30 && xfood2>xfood3-30 && yfood2>yfood3-30 || xfood1<xfood3+30 && yfood1<yfood3+30 && xfood1>xfood3-30 && yfood1>yfood3-30 ){
+		if(xfood1<xfood2+30 && yfood1<yfood2+30 && xfood1>xfood2-30 && yfood1>yfood2-30 || xfood2<xfood3+30 && yfood2<yfood3+30 && xfood2>xfood3-30 && yfood2>yfood3-30 || xfood1<xfood3+30 && yfood1<yfood3+30 && xfood1>xfood3-30 && yfood1>yfood3-30 || mat[(yfood3-2*cw)/cw][(xfood3-2*cw)/cw]==1 || mat[(yfood2-2*cw)/cw][(xfood2-2*cw)/cw]==1 || mat[(yfood1-2*cw)/cw][(xfood1-2*cw)/cw]==1){
 			update_game(); //food doesnt spawn next to each other
+		}
+
+		if(mat[(yrock-30)/15][(xrock-30+cw)/15] == 1 || mat[(yrock-30)/15][(xrock-30+2*cw)/15] ==1 || mat[(yrock-30+cw)/15][(xrock-30+cw)/15] == 1 || mat[(yrock-30+cw)/15][(xrock-30+2*cw)/15] == 1 || mat[(yrock-30+2*cw)/15][(xrock-30+cw)/15] == 1 || mat[(yrock-30+2*cw)/15][(xrock-30+2*cw)/15] == 1){
+			update_game(); //if rock spawns on the snake body
 		}
 
 		rock_check(xfood1,yfood1);
@@ -387,7 +392,7 @@ function game(){
 		check();
 		// console.log("X: "+Math.abs(cw*xhead-xfood3)+" Y: "+Math.abs(cw*yhead-yfood3));
 		// console.log("X: "+xhead+" Y: "+yhead);
-		console.log("Food: "+(xfood3-30)/15+" "+(yfood3-30)/15);
+		// console.log("Food: "+(xfood3-30)/15+" "+(yfood3-30)/15);
 		if(flag==1){
 			flag=0;
 			var tail={ x:xhead, y:yhead };		//variable tail becomes the new head and tail
@@ -401,8 +406,10 @@ function game(){
 		mat[yhead-2][xhead-2] = 1;
 		directionflag=1; //direction change allowed after movement of snake is done
 		// return_direction();
-		console.log(return_direction());
-		// console.log(mat.toString());
+		// console.log(return_direction());
+		for(var i=0;i<row;i++)
+			console.log(mat[i].toString());
+		// console.table(mat);
 	}
 
 	function conditions(){ //conditions for death
