@@ -44,7 +44,7 @@ function game(){
 	var directionflag=1; // 1 to say that direction change is allowed
 
 	var snake_array=[]; //snake body in an array
-	var speed=250;	//the lower, the faster
+	var speed=100;	//the lower, the faster
 	var ds=0; //change in speed
 	var clrReturn;
 	var score=0;
@@ -58,7 +58,7 @@ function game(){
 	//columns = 37
 	//rows = 24
 
-	var row = 25;
+	var row = 26;
 	var col = 38;
 	var mat = new Array(row);
 	for(var i = 0;i<row;i++){
@@ -165,9 +165,9 @@ function game(){
 		var dx = [1,0,-1,0];
 		var dy = [0,1,0,-1];
 		var q = [];
-		var curr = {x:xhead,y:yhead};
+		var curr = {x:xhead-2,y:yhead-2};
 		q.unshift(curr);
-		vis[yhead][xhead]=1;
+		vis[yhead-2][xhead-2]=1;
 		var found = 0;
 		var pos;
 		while(q.length > 0){
@@ -186,9 +186,9 @@ function game(){
 				}
 			}
 		}
-		// console.log(curr);
 		while(parent[pos.y][pos.x]!=curr){
 			pos=parent[pos.y][pos.x];
+			// console.log(pos.y,pos.x);
 		}
 		if(pos.x==curr.x+1){//right
 			return 2;
@@ -386,8 +386,8 @@ function game(){
 		collision();
 		check();
 		// console.log("X: "+Math.abs(cw*xhead-xfood3)+" Y: "+Math.abs(cw*yhead-yfood3));
-		// console.log("X: "+cw*xhead+" Y: "+cw*yhead);
-		// console.log(xrock+" "+yrock);
+		// console.log("X: "+xhead+" Y: "+yhead);
+		console.log("Food: "+(xfood3-30)/15+" "+(yfood3-30)/15);
 		if(flag==1){
 			flag=0;
 			var tail={ x:xhead, y:yhead };		//variable tail becomes the new head and tail
@@ -400,6 +400,7 @@ function game(){
 		snake_array.unshift(tail);		//add variable tail at the start
 		mat[yhead-2][xhead-2] = 1;
 		directionflag=1; //direction change allowed after movement of snake is done
+		// return_direction();
 		console.log(return_direction());
 		// console.log(mat.toString());
 	}
@@ -459,8 +460,35 @@ function game(){
 		}
 	}
 
-	function direction(){
+	function AIHandler(e) { //movement
+		if(directionflag==1){ //direction change allowed
+			if(e==2 && leftPressed!=true) { 	   //right
+				keyreset(); //make all directions false
+				rightPressed = true;
+				directionflag=0; //direction change not allowed until snake movement
+				rotate=2;
+			}else if(e==4 && rightPressed!=true) { //left
+				keyreset();
+				leftPressed = true;
+				directionflag=0;
+				rotate=4;
+			}else if(e==1 && bottomPressed!=true){  //top
+				keyreset();
+				topPressed = true;
+				directionflag=0;
+				rotate=1;
+			}else if(e==3 && topPressed!=true){  //down
+				keyreset();
+				bottomPressed = true;
+				directionflag=0;
+				rotate=3;
+			}
+		}
+	}
 
+	function direction(){
+		var val = return_direction();
+		AIHandler(val);
 		if(rightPressed==true){ //new head is at the right
 			xhead++;
 		}
