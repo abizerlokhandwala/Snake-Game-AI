@@ -489,9 +489,13 @@ function game(){
 			is_ai = is_ai^1;
 			if(is_ai){
 				speed=50;
+				document.getElementById("ai_act").style.display= "inline-block";
+				document.getElementById("user_act").style.display= "none";
 				update_speed();
 			}else{
 				speed=125;
+				document.getElementById("user_act").style.display= "inline-block";
+				document.getElementById("ai_act").style.display= "none";
 				update_speed();
 			}
 		}
