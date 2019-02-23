@@ -569,6 +569,10 @@ function game(){
 		document.getElementById("life1").style.display= "inline-block";
 		document.getElementById("life2").style.display= "inline-block";
 		document.getElementById("life3").style.display= "inline-block";
+
+		document.getElementById("ai_act").style.display= "inline-block";
+		document.getElementById("user_act").style.display= "none";
+
 		addEventListener("keydown", keyDownHandler, false);
 		create_snake(); //make snake array
 		reset_mat();
