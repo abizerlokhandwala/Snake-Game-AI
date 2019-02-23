@@ -53,13 +53,15 @@ function game(){
 	var life=3;
 	var rotate=2; //1 is top, 2 right, 3 down, 4 left
 
+	var is_ai = 1;
+
 	//left top = (30,30)
 	//right bottom = (570,375)
 	//columns = 37
 	//rows = 24
 
-	var row = 26;
-	var col = 38;
+	var row = 24;
+	var col = 37;
 	var mat = new Array(row);
 	for(var i = 0;i<row;i++){
 		mat[i] = new Array(col);
@@ -168,23 +170,19 @@ function game(){
 		var curr = {x:xhead-2,y:yhead-2};
 		q.unshift(curr);
 		vis[yhead-2][xhead-2]=1;
-		var found = 0;
 		var pos;
 		while(q.length > 0){
 			var val = q.pop();
 			pos = val;
 			if(mat[val.y][val.x]==3){
-				found = 1;
 				pos = val;
 				break;
 			}
-			if(found==0){
-				for(var i=0;i<4;i++){
-					if(issafe(dx[i]+val.x,dy[i]+val.y,vis)==1){
-						parent[dy[i]+val.y][dx[i]+val.x] = val;
-						vis[dy[i]+val.y][dx[i]+val.x] = 1;
-						q.unshift({x:dx[i]+val.x,y:dy[i]+val.y});
-					}
+			for(var i=0;i<4;i++){
+				if(issafe(dx[i]+val.x,dy[i]+val.y,vis)==1){
+					parent[dy[i]+val.y][dx[i]+val.x] = val;
+					vis[dy[i]+val.y][dx[i]+val.x] = 1;
+					q.unshift({x:dx[i]+val.x,y:dy[i]+val.y});
 				}
 			}
 		}
@@ -318,7 +316,7 @@ function game(){
 
 	function rock_check(xposition,yposition){ //check if rock spawns next to a food particle position
 		if(xposition>=xrock && xposition<=xrock+50 && yposition<=yrock+60 && yposition>=yrock || xrock<=xhead*cw+30 && xrock>=xhead*cw-60 && yrock>=yhead*cw-40 && yrock<=yhead*cw){
-			return 1;
+			return 1;    //reset it
 		}
 		return 0;
 	}
@@ -350,13 +348,15 @@ function game(){
 			randnum2=2+Math.floor(Math.random()*150);
 			question();
 			randnum3=ques*Math.floor(2+Math.random()*10);
-			if(randnum1==randnum2 || randnum2==randnum3 || randnum3==randnum1 || randnum1%ques==0 || randnum2%ques==0){ //if 2 nos are the same or wrong ans are right
-				continue;
-			}else{
-				update_speed();
-				set_mat();
-				break;
+			while(randnum1==randnum2 || randnum2==randnum3 || randnum3==randnum1 || randnum1%ques==0 || randnum2%ques==0){ //if 2 nos are the same or wrong ans are right
+				randnum1=2+Math.floor(Math.random()*150); //between 2 and 152
+				randnum2=2+Math.floor(Math.random()*150);
+				question();
+				randnum3=ques*Math.floor(2+Math.random()*10);
 			}
+			update_speed();
+			set_mat();
+			break;
 		}
 	}
 
@@ -459,27 +459,39 @@ function game(){
 	}
 
 	function keyDownHandler(e) { //movement
-		if(directionflag==1){ //direction change allowed
-			if( (e.keyCode == 39 || e.keyCode==68) && leftPressed!=true) { 	   //right
-				keyreset(); //make all directions false
-				rightPressed = true;
-				directionflag=0; //direction change not allowed until snake movement
-				rotate=2;
-			}else if( (e.keyCode == 37 || e.keyCode==65) && rightPressed!=true) { //left
-				keyreset();
-				leftPressed = true;
-				directionflag=0;
-				rotate=4;
-			}else if( (e.keyCode == 38 || e.keyCode==87) && bottomPressed!=true){  //top
-				keyreset();
-				topPressed = true;
-				directionflag=0;
-				rotate=1;
-			}else if( (e.keyCode == 40 || e.keyCode==83)&& topPressed!=true){  //down
-				keyreset();
-				bottomPressed = true;
-				directionflag=0;
-				rotate=3;
+		if(is_ai == 0){
+			if(directionflag==1){ //direction change allowed
+				if( (e.keyCode == 39 || e.keyCode==68) && leftPressed!=true) { 	   //right
+					keyreset(); //make all directions false
+					rightPressed = true;
+					directionflag=0; //direction change not allowed until snake movement
+					rotate=2;
+				}else if( (e.keyCode == 37 || e.keyCode==65) && rightPressed!=true) { //left
+					keyreset();
+					leftPressed = true;
+					directionflag=0;
+					rotate=4;
+				}else if( (e.keyCode == 38 || e.keyCode==87) && bottomPressed!=true){  //top
+					keyreset();
+					topPressed = true;
+					directionflag=0;
+					rotate=1;
+				}else if( (e.keyCode == 40 || e.keyCode==83)&& topPressed!=true){  //down
+					keyreset();
+					bottomPressed = true;
+					directionflag=0;
+					rotate=3;
+				}
+			}
+		}
+		if(e.keyCode == 81){
+			is_ai = is_ai^1;
+			if(is_ai){
+				speed=50;
+				update_speed();
+			}else{
+				speed=125;
+				update_speed();
 			}
 		}
 	}
@@ -511,8 +523,10 @@ function game(){
 	}
 
 	function direction(){
-		var val = return_direction();
-		AIHandler(val);
+		if(is_ai == 1){
+			var val = return_direction();
+			AIHandler(val);
+		}
 		if(rightPressed==true){ //new head is at the right
 			xhead++;
 		}
