@@ -10,6 +10,7 @@
 //when the food is eaten, it doesnt pop the last element of the array and instead only adds an extra elemnt to the array
 
 var start_flag=0;
+var clrReturn;
 
 function game(){
 
@@ -46,7 +47,6 @@ function game(){
 	var snake_array=[]; //snake body in an array
 	var speed=50;	//the lower, the faster
 	var ds=0; //change in speed
-	var clrReturn;
 	var score=0;
 	var length=4; //initial length
 	var flag=0; //0 for length not increasing, 1 for increase
@@ -362,12 +362,13 @@ function game(){
 
 	function update_speed(){ //decrease speed
 		clearInterval(clrReturn);   // clear the initial set interval
-		if(speed==50){
-			clrReturn=setInterval(move,speed);
-		}else{
-			speed=speed-ds;				// update the speed to make it faster
-			clrReturn=setInterval(move,speed);  // new set interval with new speed
-		}
+		clrReturn=setInterval(move,speed);
+		// if(speed==50){
+		// 	clrReturn=setInterval(move,speed);
+		// }else{
+		// 	speed=speed-ds;				// update the speed to make it faster
+		// 	clrReturn=setInterval(move,speed);  // new set interval with new speed
+		// }
 	}
 
 	function check(){
@@ -424,8 +425,8 @@ function game(){
 		directionflag=1; //direction change allowed after movement of snake is done
 		// return_direction();
 		// console.log(return_direction());
-		for(var i=0;i<row;i++)
-			console.log(mat[i].toString());
+		// for(var i=0;i<row;i++)
+			// console.log(mat[i].toString());
 		// console.table(mat);
 	}
 
