@@ -48,7 +48,7 @@ function game(){
 	var speed=50;	//the lower, the faster
 	var ds=0; //change in speed
 	var score=0;
-	var length=37; //initial length
+	var length=4; //initial length
 	var flag=0; //0 for length not increasing, 1 for increase
 	var life=3;
 	var rotate=2; //1 is top, 2 right, 3 down, 4 left
