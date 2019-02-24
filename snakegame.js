@@ -48,7 +48,7 @@ function game(){
 	var speed=50;	//the lower, the faster
 	var ds=0; //change in speed
 	var score=0;
-	var length=4; //initial length
+	var length=37; //initial length
 	var flag=0; //0 for length not increasing, 1 for increase
 	var life=3;
 	var rotate=2; //1 is top, 2 right, 3 down, 4 left
@@ -336,6 +336,10 @@ function game(){
 				continue; //food doesnt spawn next to each other
 			}
 
+			if(xfood1 == xhead && yfood1 == yhead || xfood2 == xhead && yfood2 == yhead || xfood3 == xhead && yfood3 == yhead ){
+				continue;
+			}
+
 			if(mat[(yrock-30)/15][(xrock-30+cw)/15] == 1 || mat[(yrock-30)/15][(xrock-30+2*cw)/15] ==1 || mat[(yrock-30+cw)/15][(xrock-30+cw)/15] == 1 || mat[(yrock-30+cw)/15][(xrock-30+2*cw)/15] == 1 || mat[(yrock-30+2*cw)/15][(xrock-30+cw)/15] == 1 || mat[(yrock-30+2*cw)/15][(xrock-30+2*cw)/15] == 1){
 				continue; //if rock spawns on the snake body
 			}
@@ -385,7 +389,7 @@ function game(){
 			reset_mat();
 			update_game();
 			if(score){ //negative score not possible
-			score--;
+                score--;
 			}
 			life--;		//eats the wrong food
 
@@ -405,7 +409,7 @@ function game(){
 		drawbody();
 		border();
 		conditions();
-		direction();
+		direction();	//snake moves ahead
 		collision();
 		check();
 		// console.log("X: "+Math.abs(cw*xhead-xfood3)+" Y: "+Math.abs(cw*yhead-yfood3));
